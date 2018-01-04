@@ -33,7 +33,7 @@ addons:
 before_install:
   - $CC --version
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update ; fi
-  # gnutls, libgcrypt, gmp, and nettle are already installed
+  # gmp is already installed
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install --force cppunit gettext openssl libssh2 c-ares sqlite3 ccache ; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew link --force cppunit gettext openssl libssh2 c-ares sqlite3 ccache ; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-7" CC="gcc-7"; fi
@@ -44,6 +44,6 @@ before_script:
   - automake
   - autoconf
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then ./configure --without-openssl --without-gnutls --with-appletls --disable-nls CPPFLAGS=-fsanitize=address LDFLAGS=-fsanitize=address; fi
-  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then ./configure CPPFLAGS=-fsanitize=address LDFLAGS=-fsanitize=address; fi
+  - if [[ "$TRAVIS_OS_NAME" != "osx" ]]; then ./configure CPPFLAGS=-fsanitize=address LDFLAGS="-fsanitize=address -fuse-ld=gold"; fi
 script:
   - make CC="ccache $CC" CXX="ccache $CXX" check
